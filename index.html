@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Calculator</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+    }
+
+    .calculator {
+      width: 320px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .display {
+      background: transparent;
+      color: #fff;
+      text-align: right;
+      padding: 20px;
+      font-size: 2.5rem;
+      min-height: 70px;
+      box-sizing: border-box;
+      word-wrap: break-word;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 50%;
+      padding: 20px;
+      font-size: 1.4rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+    }
+
+    .operator { background: #f59e0b; }
+    .clear { background: #ef4444; }
+    .backspace { background: #3b82f6; }
+    .equal { background: #10b981; }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <!-- Row 1 -->
+      <button class="clear">C</button>
+      <button class="backspace">⌫</button>
+      <button>%</button>
+      <button class="operator">÷</button>
+
+      <!-- Row 2 -->
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button class="operator">×</button>
+
+      <!-- Row 3 -->
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button class="operator">-</button>
+
+      <!-- Row 4 -->
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button class="operator">+</button>
+
+      <!-- Row 5 -->
+      <button>0</button>
+      <button>.</button>
+      <button class="equal">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll("button");
+    let currentInput = "";
+    let resultDisplayed = false;
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const value = button.textContent;
+
+        if (value === "C") {
+          currentInput = "";
+          display.textContent = "0";
+        } 
+        else if (button.classList.contains("backspace")) {
+          currentInput = currentInput.slice(0, -1);
+          display.textContent = currentInput || "0";
+        }
+        else if (value === "=") {
+          try {
+            currentInput = currentInput.replace(/×/g, "*").replace(/÷/g, "/");
+            currentInput = eval(currentInput).toString();
+            display.textContent = currentInput;
+            resultDisplayed = true;
+          } catch {
+            display.textContent = "Error";
+            currentInput = "";
+          }
+        } 
+        else {
+          if (display.textContent === "0" || resultDisplayed) {
+            currentInput = value;
+            resultDisplayed = false;
+          } else {
+            currentInput += value;
+          }
+          display.textContent = currentInput;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
